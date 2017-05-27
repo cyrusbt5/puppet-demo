@@ -1,30 +1,33 @@
+# == Class: config::dns
+
 class config::dns {
-	
-  package { 'bind':
-    ensure => present
+  # resources
+  package { ['bind', 'bind-utils']:
+    ensure => latest,
   } ->
-  
+
   file { '/etc/named.conf':
-    ensure  => present,
-    content => template("config/named.conf.erb"),
+    ensure  => file,
+    content => template('config/named.conf.erb'),
+    group   => 'root',
     mode    => '0644',
     owner   => 'root',
-    group   => 'root',
     require => Package['bind'],
   } ~>
 
   file { '/etc/named/consul.conf':
-    ensure  => present,
-    content => template("config/consul.conf.erb"),
+    ensure  => file,
+    content => template('config/consul.conf.erb'),
+    group   => 'root',
     mode    => '0644',
     owner   => 'root',
-    group   => 'root',
     require => Package['bind'],
   } ~>
-  
+
   service { 'named':
     ensure  => running,
     enable  => true,
     require => File['/etc/named.conf'],
-  } 
+  }
+
 }
