@@ -1,6 +1,7 @@
 registrator:
-  image: gliderlabs/registrator:v6
+  image: gliderlabs/registrator
+  restart: always
   net: "host"
-  volumes: 
-   - "/var/run/docker.sock:/tmp/docker.sock"
-  command: consul://<%= @consul_ip %>:8500 
+  volumes:
+    - "/var/run/docker.sock:/tmp/docker.sock"
+  command: "-ip <%= @ipaddress_eth1 %> consul://<%= @consul_ip %>:8500"
